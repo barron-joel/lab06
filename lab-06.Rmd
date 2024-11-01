@@ -27,10 +27,11 @@ diamonds <- diamonds %>% rename(
 ## Exercise 1
 
 ```{r}
-# Do some preliminary investigations & cleaning
+diamonds <- diamonds %>%
+  filter(!(width_mm == 0.00|length_mm == 0.00|depth_mm == 0.00))
 
 
-
+ 
 
 ```
 
@@ -43,14 +44,21 @@ diamonds <- diamonds %>%
   mutate(table_mm = table_pct * width_mm / 100)
 
 # Overall table_mm arithmetic mean?
-
+diamonds %>%
+  summarise(
+    table_mean = mean(table_mm)
+  )
 
 
 
 
 
 # table_mm arithmetic mean within each clarity category
-
+diamonds %>%
+  group_by(clarity) %>%
+  summarise(
+    table_mean = mean(table_mm)
+  )
 
 
 
@@ -58,11 +66,13 @@ diamonds <- diamonds %>%
 
 ```
 
-_Add your comment here_
+Diamonds with higher clarity have smaller table length (on average). There is a negative relationship between the 2 variables.
 
 ```{r}
 # calculate the arithmetic mean across all numeric variables
 
+diamonds%>%
+  summarise(across(if_all(is.numeric() == TRUE), mean))
 
 
 
@@ -73,7 +83,9 @@ _Add your comment here_
 ```{r}
 # Write gmean() command
 
-
+gmean <- function(x) {
+  exp(1/count(x) * sum(log(x)))
+}
 
 ```
 
@@ -92,7 +104,8 @@ test_data <- list(
 
 
 # Create for loop to test gmean() on the above examples
-
+test_data %>%
+  gmean(test2)
 
 ```
 
